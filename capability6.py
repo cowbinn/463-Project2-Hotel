@@ -46,15 +46,18 @@ def checkOut(roomNumber):
     messagebox.showinfo('Check Out Success', 'Checked Out Successfully')
 
 
-def my_tracer(a, win):
-    new_a = win.globalgetvar('a')
+def my_tracer(a, b, c):
+    new_a = a.get()
     if new_a == '':
         new_a = 0.0
-    new_b = win.globalgetvar('b')
+    new_b = b.get()
     if new_b == '':
         new_b = 0.0
     new_c = float(new_a) - float(new_b)
-    a.set(new_c)
+    c.config(state=NORMAL)
+    c.delete(0, END)
+    c.insert(0, new_c)
+    c.config(state=DISABLED)
 
 
 def room(roomNumber, firstName=None, lastName=None, dateMade=None, dateCheckIn=None, dateCheckOut=None):
@@ -64,7 +67,7 @@ def room(roomNumber, firstName=None, lastName=None, dateMade=None, dateCheckIn=N
     cur.execute(sql)
     result = cur.fetchall()
 
-    window = Tk()
+    window = Toplevel()
     width = 400
     height = 850
     background_color = 'light gray'
@@ -114,29 +117,28 @@ def room(roomNumber, firstName=None, lastName=None, dateMade=None, dateCheckIn=N
     room_rate_text.insert(0, '$' + str(result[0][3]))
     room_rate_text.config(state='disabled')
 
-    total_charge_var = StringVar(name='a')
+    total_charge_var = StringVar()
     total_charge_label = Label(label_frame, text='Total Charge', bg=background_color, fg='black',
                                font=('Arial', 16))
     total_charge_label.place(x=40, y=500)
     total_charge_text = Entry(label_frame, bg='white', font=('Arial', 16), textvariable=total_charge_var)
     total_charge_text.place(x=40, y=530)
 
-    payments_made_var = StringVar(name='b')
+    payments_made_var = StringVar()
     payments_made_label = Label(label_frame, text='Payments Made', bg=background_color, fg='black',
                                 font=('Arial', 16))
     payments_made_label.place(x=40, y=580)
     payments_made_text = Entry(label_frame, bg='white', font=('Arial', 16), textvariable=payments_made_var)
     payments_made_text.place(x=40, y=610)
 
-    balance_var = StringVar(name='c')
     balance_label = Label(label_frame, text='Balance', bg=background_color, fg='black', font=('Arial', 16))
     balance_label.place(x=40, y=660)
-    balance_text = Entry(label_frame, bg='white', font=('Arial', 16), textvariable=balance_var)
+    balance_text = Entry(label_frame, bg='white', font=('Arial', 16))
     balance_text.place(x=40, y=690)
     balance_text.config(state='disabled')
 
-    total_charge_var.trace('w', lambda a, b, c: my_tracer(balance_var, window))
-    payments_made_var.trace('w', lambda a, b, c: my_tracer(balance_var, window))
+    total_charge_var.trace('w', lambda a, b, c: my_tracer(total_charge_text, payments_made_text, balance_text))
+    payments_made_var.trace('w', lambda a, b, c: my_tracer(total_charge_text, payments_made_text, balance_text))
 
     if result[0][2] == 'Unavailable/Occupied':
         cur = conn.cursor()
@@ -149,15 +151,14 @@ def room(roomNumber, firstName=None, lastName=None, dateMade=None, dateCheckIn=N
         guest_name_text.insert(0, str(guest[0][0]) + ' ' + str(guest[0][1]))
         guest_name_text.config(state='disabled')
 
-        print(result[0][4])
         check_in_text.insert(0, result[0][4])
-        check_in_text.config(state='disabled')
+        # check_in_text.config(state='disabled')
         expected_check_out_text.insert(0, result[0][5])
-        expected_check_out_text.config(state='disabled')
+        # expected_check_out_text.config(state='disabled')
         total_charge_text.insert(0, result[0][7])
-        total_charge_text.config(state='disabled')
+        # total_charge_text.config(state='disabled')
         payments_made_text.insert(0, result[0][8])
-        payments_made_text.config(state='disabled')
+        # payments_made_text.config(state='disabled')
         balance_text.insert(0, result[0][9])
         balance_text.config(state='disabled')
         btn = Button(label_frame, text='Check Out', bg='white', font=('Arial', 16),
@@ -210,6 +211,3 @@ def room(roomNumber, firstName=None, lastName=None, dateMade=None, dateCheckIn=N
 
     label_frame.place(x=0, y=0)
     window.mainloop()
-
-
-room(101)
