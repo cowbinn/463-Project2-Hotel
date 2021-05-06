@@ -66,6 +66,7 @@ def room(roomNumber, firstName=None, lastName=None, dateMade=None, dateCheckIn=N
     sql = 'SELECT * FROM Room WHERE RoomNumber=' + str(roomNumber)
     cur.execute(sql)
     result = cur.fetchall()
+    print(result)
 
     window = Toplevel()
     width = 400
@@ -142,13 +143,13 @@ def room(roomNumber, firstName=None, lastName=None, dateMade=None, dateCheckIn=N
 
     if result[0][2] == 'Unavailable/Occupied':
         cur = conn.cursor()
-        sql = 'SELECT first_name, last_name FROM guests WHERE guest_id=' + str(result[0][6])
+        sql = 'SELECT first_name, last_name, guest_id FROM guests WHERE guest_id=' + str(result[0][6])
         cur.execute(sql)
         guest = cur.fetchall()
 
         guest_name_text = Entry(label_frame, bg='white', fg='black', font=('Arial', 16))
         guest_name_text.place(x=40, y=50)
-        guest_name_text.insert(0, str(guest[0][0]) + ' ' + str(guest[0][1]))
+        guest_name_text.insert(0, str(guest[0][0]) + ' ' + str(guest[0][1]) + ' ' + str(result[0][6]))
         guest_name_text.config(state='disabled')
 
         check_in_text.insert(0, result[0][4])
@@ -165,7 +166,10 @@ def room(roomNumber, firstName=None, lastName=None, dateMade=None, dateCheckIn=N
                      command=lambda room_number=room_number_text: checkOut(room_number))
 
         view_button = Button(label_frame, text='View Guest', font=('Arial', 12),
-                             command=lambda: guestInfo(result[0][6]))
+                             command=lambda: guestInfo(guest_name_text))
+
+        btn.place(x=140, y=760)
+        view_button.place(x=305, y=50)
 
     elif result[0][2] == 'Available':
         if firstName is None and lastName is None and dateCheckIn is None and dateCheckOut is None:
@@ -206,8 +210,8 @@ def room(roomNumber, firstName=None, lastName=None, dateMade=None, dateCheckIn=N
         view_button = Button(label_frame, text='View Guest', font=('Arial', 12),
                              command=lambda: guestInfo(guest_name_text))
 
-    btn.place(x=140, y=760)
-    view_button.place(x=305, y=50)
+        btn.place(x=140, y=760)
+        view_button.place(x=305, y=50)
 
     label_frame.place(x=0, y=0)
     window.mainloop()
