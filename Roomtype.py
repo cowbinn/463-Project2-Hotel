@@ -2,33 +2,67 @@ from tkinter import  Label, Menubutton, Tk
 from tkinter import *
 import array
 import tkinter.messagebox
+import sqlite3
+from capability6 import room
 
 
 window= Tk()
 window.title("Room Type")
 window.geometry("850x200")
-a=99#set room to start at 99 then add 1 to make 100 initial starting room
 
+h=99#set room to start at 99 then add 1 to make 100 initial starting room
+
+def makeAvailable(roomNumber):
+    conn = sqlite3.connect('hotel.db')
+    cur = conn.cursor()
+    sql = 'UPDATE Room SET RoomStatus = "Available" WHERE roomNumber = ' + str(roomNumber)
+    cur.execute(sql)
+    conn.commit()
+def makeUnavailable(roomNumber):
+    conn = sqlite3.connect('hotel.db')
+    cur = conn.cursor()
+    sql = 'UPDATE Room SET RoomStatus = "Unavailable/Occupied" WHERE roomNumber = ' + str(roomNumber)
+    cur.execute(sql)
+    conn.commit()
+def makeRoomDirty(roomNumber):
+    conn = sqlite3.connect('hotel.db')
+    cur = conn.cursor()
+    sql = 'UPDATE Room SET RoomStatus = "Unavailable/Dirty" WHERE roomNumber = ' + str(roomNumber)
+    cur.execute(sql)
+    conn.commit()
+def makeRoomMaintance(roomNumber):
+    conn = sqlite3.connect('hotel.db')
+    cur = conn.cursor()
+    sql = 'UPDATE Room SET RoomStatus = "Unavailable/Maintenance" WHERE roomNumber = ' + str(roomNumber)
+    cur.execute(sql)
+    conn.commit()
 #function to change color depends on status of the room
-def availableRoom(row,column):
-    #print(label.grid_info())
+def availableRoom(row,column,h):
+    # print(label.grid_info())
+    makeAvailable(h)
     widget= window.grid_slaves(row=row, column=column)[0]
     widget.configure(bg="green")
-def dirtyRoom(row,column):
+def dirtyRoom(row,column,h):
     #print(label.grid_info())
+    makeRoomDirty(h)
     widget= window.grid_slaves(row=row, column=column)[0]
     widget.configure(bg="pink",fg="black")
-def occupiedRoom(row,column):
+
+def occupiedRoom(row,column,h):
     #print(label.grid_info())
+    makeUnavailable(h)
     widget= window.grid_slaves(row=row, column=column)[0]
     widget.configure(bg="blue",fg="black")
-def maintenanceRoom(row,column):
+    room(h)
+  
+def maintenanceRoom(row,column,h):
     #print(label.grid_info())
+    makeRoomMaintance(h)
     widget= window.grid_slaves(row=row, column=column)[0]
     widget.configure(bg="red",fg="white")
 
 for row in range (7):#populate room and room types
-    
+
 
     for column in range (6):
         
@@ -66,18 +100,50 @@ for row in range (7):#populate room and room types
         
         
         else:  
-            a+=1  #using Menu Button to let user select status of the room
-            label = Menubutton(window, text=a,bg="green",fg="white",padx= 1,pady=1)
+            h+=1  #using Menu Button to let user select status of the room
+            label = Menubutton(window, text=h,bg="green",fg="white",padx= 1,pady=1)
             label.grid(row=row, column= column,sticky= "nsew",padx= 1,pady=1)
             window.grid_columnconfigure(column, weight= 1, uniform =1)
             label.menu= Menu (label)
             label["menu"]= label.menu
-            label.menu.add_command (label = "available",command=lambda  row= row, column=column: availableRoom(row,column))
-            label.menu.add_command (label = "occupied", command=lambda  row= row, column=column : occupiedRoom(row,column))
-            label.menu.add_command (label = "dirty", command=lambda  row= row, column=column: dirtyRoom(row,column))
-            label.menu.add_command (label = "maintenance", command=lambda  row= row, column=column: maintenanceRoom(row,column))
-
+            label.menu.add_command (label = "available",command=lambda  h = h ,row= row, column=column: availableRoom(row,column,h))
+            label.menu.add_command (label = "occupied", command=lambda  h= h, row= row, column=column : occupiedRoom(row,column,h))
+            label.menu.add_command (label = "dirty", command=lambda h=h, row= row, column=column: dirtyRoom(row,column,h))
+            label.menu.add_command (label = "maintenance", command=lambda  h=h,row= row, column=column: maintenanceRoom(row,column,h))
 
             
-            
+conn = sqlite3.connect('hotel.db')
+sql = 'SELECT * FROM Room'
+cur = conn.cursor()
+cur.execute(sql)
+result = cur.fetchall()
+
+
+for row in result:
+    print(row)
+    if (row[2]== "Unavailable/Occupied"):
+        sql2 = 'SELECT RowX, ColumnY FROM RoomType WHERE RoomNumber =' +row[0]
+        cur.execute(sql2)
+        roomResult = cur.fetchall()
+        for temp in roomResult:
+            occupiedRoom(temp[0],temp[1],row[0])
+    if (row[2]== "Unavailable/Dirty"):
+        sql3 = 'SELECT RowX, ColumnY FROM RoomType WHERE RoomNumber =' +row[0]
+        cur.execute(sql3)
+        roomResult1 = cur.fetchall()
+        for temp in roomResult1:
+            dirtyRoom(temp[0],temp[1],row[0])
+    if (row[2]== "Unavailable/Maintenance"):
+        sql4 = 'SELECT RowX, ColumnY FROM RoomType WHERE RoomNumber =' +row[0]
+        cur.execute(sql4)
+        roomResult2 = cur.fetchall()
+        for temp in roomResult2:
+            maintenanceRoom(temp[0],temp[1],row[0])
+        
+        
+
+ 
+
+                
+    
 window.mainloop()

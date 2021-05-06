@@ -211,3 +211,4 @@ def room(roomNumber, firstName=None, lastName=None, dateMade=None, dateCheckIn=N
 
     label_frame.place(x=0, y=0)
     window.mainloop()
+room(101)
