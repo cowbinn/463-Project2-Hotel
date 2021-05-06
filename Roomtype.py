@@ -37,6 +37,13 @@ def makeRoomMaintance(roomNumber):
     cur.execute(sql)
     conn.commit()
 #function to change color depends on status of the room
+def loadDirtyRoom(row,column):
+    widget= window.grid_slaves(row=row, column=column)[0]
+    widget.configure(bg="pink",fg="black")
+def loadOccupiedRoom(row,column):
+    widget= window.grid_slaves(row=row, column=column)[0]
+    widget.configure(bg="blue",fg="black")
+    widget.configure(bg="red",fg="white")
 def availableRoom(row,column,h):
     # print(label.grid_info())
     makeAvailable(h)
@@ -53,7 +60,8 @@ def occupiedRoom(row,column,h):
     makeUnavailable(h)
     widget= window.grid_slaves(row=row, column=column)[0]
     widget.configure(bg="blue",fg="black")
-    room(h)
+ 
+    
   
 def maintenanceRoom(row,column,h):
     #print(label.grid_info())
@@ -126,19 +134,19 @@ for row in result:
         cur.execute(sql2)
         roomResult = cur.fetchall()
         for temp in roomResult:
-            occupiedRoom(temp[0],temp[1],row[0])
+            loadOccupiedRoom(temp[0],temp[1])
     if (row[2]== "Unavailable/Dirty"):
         sql3 = 'SELECT RowX, ColumnY FROM RoomType WHERE RoomNumber =' +row[0]
         cur.execute(sql3)
         roomResult1 = cur.fetchall()
         for temp in roomResult1:
-            dirtyRoom(temp[0],temp[1],row[0])
+            loadDirtyRoom(temp[0],temp[1])
     if (row[2]== "Unavailable/Maintenance"):
         sql4 = 'SELECT RowX, ColumnY FROM RoomType WHERE RoomNumber =' +row[0]
         cur.execute(sql4)
         roomResult2 = cur.fetchall()
         for temp in roomResult2:
-            maintenanceRoom(temp[0],temp[1],row[0])
+            loadMaintenanceRoom(temp[0],temp[1])
         
         
 
