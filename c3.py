@@ -1,78 +1,106 @@
-import tkinter as tk
+from tkinter import *
+from tkinter import ttk
+from tkcalendar import *
+from tkinter import messagebox
+import sqlite3
 
-def buttonClick():
-    dailyRate_label = tk.Label(labelFrame, text="Daily Rate: Placeholder")
-    dailyRate_label.pack()
-    totalCharge_label = tk.Label(labelFrame, text="Total Charge: Placeholder")
-    totalCharge_label.pack()
-
-def reservationClick():
-    newWindow = tk.Toplevel(labelFrame, width=540, height=310)
-    firstNameR_label = tk.Label(newWindow, text="First Name")
-    firstNameR_label.pack()
-
-    lastNameR_label = tk.Label(newWindow, text="Last Name")
-    lastNameR_label.pack()
-
-    dateCheckInR_label = tk.Label(newWindow, text="Date Check-In")
-    dateCheckInR_label.pack()
-
-    dateCheckOutR_label = tk.Label(newWindow, text="Date Check Out")
-    dateCheckOutR_label.pack()
-
-    RoomTypeR_label = tk.Label(newWindow, text="Room Type")
-    RoomTypeR_label.pack()
-
-    RateR_label = tk.Label(newWindow, text="Rate")
-    RateR_label.pack()
-
-    totalChargeR_label = tk.Label(newWindow, text="Total Charge")
-    totalChargeR_label.pack()
-
-window = tk.Tk()
+window = Tk()
+window.geometry("640x480")
 width = 640
 height = 480
 window.title('Reservations')
 window.geometry('640x480')
 window.resizable(True, True)
-labelFrame = tk.Frame(window, width=width, height=height)
+background_color = 'light gray'
+labelFrame = Frame(window, width=width, height=height)
+
+def addReservation():
+
+    addResWindow = Toplevel(window)
+    addResWindow.title("Add Reservation")
+    addResWindow.geometry("500x550")
+    reservation_frame = Frame(addResWindow, width=400, height=850)
+    reservation_frame.place(x=0, y=0)
+
+    firstName_label = Label(reservation_frame, text='First Name', bg=background_color, font=('Arial', 16))
+    firstName_text = Entry(reservation_frame, bg='white', font=('Arial', 16))
+    firstName_label.place(x=40, y=20)
+    firstName_text.place(x=150, y=20)
+
+    lastName_label = Label(reservation_frame, text='Last Name', bg=background_color, font=('Arial', 16))
+    lastName_text = Entry(reservation_frame, bg='white', font=('Arial', 16))
+    lastName_label.place(x=40, y=60)
+    lastName_text.place(x=150, y=60)
+
+    dateMade_label = Label(reservation_frame, text='Date Made', bg=background_color, fg='black',
+                           font=('Arial', 16))
+    dateMade_label.place(x=40, y=100)
+    dateMade_text = DateEntry(reservation_frame, bg='white', font=('Arial', 16))
+    dateMade_text.place(x=150, y=100)
+    dateMade_text.delete(0, END)
+
+    dateCheckIn_label = Label(reservation_frame, text='Date Check In', bg=background_color, fg='black',
+                           font=('Arial', 16))
+    dateCheckIn_label.place(x=40, y=140)
+    dateCheckIn_label = DateEntry(reservation_frame, bg='white', font=('Arial', 16))
+    dateCheckIn_label.place(x=180, y=140)
+    dateCheckIn_label.delete(0, END)
+
+    dateCheckOut_label = Label(reservation_frame, text='Date Check Out', bg=background_color, fg='black',
+                           font=('Arial', 16))
+    dateCheckOut_label.place(x=40, y=180)
+    dateCheckOut_label = DateEntry(reservation_frame, bg='white', font=('Arial', 16))
+    dateCheckOut_label.place(x=200, y=180)
+    dateCheckOut_label.delete(0, END)
+
+    roomType_label = Label(reservation_frame, text='Room Type', bg=background_color, fg='black', font=('Arial', 16))
+    roomType_label.place(x=40, y=220)
+    roomType_text = Entry(reservation_frame, bg='white', font=('Arial', 16))
+    roomType_text.place(x=155, y=220)
+
+    roomNumber_label = Label(reservation_frame, text='Room Number', bg=background_color, fg='black', font=('Arial', 16))
+    roomNumber_label.place(x=40, y=260)
+    roomNumber_text = Entry(reservation_frame, bg='white', font=('Arial', 16))
+    roomNumber_text.place(x=180, y=260)
+
+    websiteReservation_label = Label(reservation_frame, text='Website Reservation Made', bg=background_color, fg='black', font=('Arial', 16))
+    websiteReservation_label.place(x=40, y=300)
+    websiteReservation_label = Entry(reservation_frame, bg='white', font=('Arial', 16))
+    websiteReservation_label.place(x=40, y=330)
+
+    rate_label = Label(reservation_frame, text='Rate($/Day)', bg=background_color, fg='black', font=('Arial', 16))
+    rate_label.place(x=40, y=360)
+    rate_label = Entry(reservation_frame, bg='white', font=('Arial', 16))
+    rate_label.place(x=165, y=360)
+
+    totalCharge_label = Label(reservation_frame, text='Total Charge', bg=background_color, fg='black', font=('Arial', 16))
+    totalCharge_label.place(x=40, y=400)
+    totalCharge_label = Entry(reservation_frame, bg='white', font=('Arial', 16))
+    totalCharge_label.place(x=170, y=400)
+
+    addReservation = Button(addResWindow, text="Click to add")
+    addReservation.place(x=170, y=450)
+
+def deleteReservation():
+    addDelWindow = Toplevel(window)
+    addDelWindow.title("Delete Reservation")
+    addDelWindow.geometry("500x450")
+    deleteReservation_frame = Frame(addDelWindow, width=400, height=850)
+    deleteReservation_frame.place(x=0, y=0)
+
+    reservation_label = Label(deleteReservation_frame, text='Enter Reservation Last Name', bg=background_color, font=('Arial', 16))
+    reservation_text = Entry(deleteReservation_frame, bg='white', font=('Arial', 16))
+    reservation_label.place(x=40, y=60)
+    reservation_text.place(x=40, y=90)
+
+    searchBtn = Button(addDelWindow, text="Search")
+    searchBtn.place(x=40, y=120)
 
 
-roomTypes = [
-    "King(K)",
-    "Double Queen(DQ)",
-    "Double Queen with Kitchen(DQK)",
-    "Suite(S)"
-]
-
-firstName_label = tk.Label(labelFrame, text="First Name")
-firstName_entry = tk.Entry()
-firstName_label.pack(), firstName_entry.pack()
-
-lastName_label = tk.Label(labelFrame, text="Last Name")
-lastName_entry = tk.Entry()
-lastName_label.pack(), lastName_entry.pack()
-
-dateCheckIn_label = tk.Label(labelFrame, text="Date Check-In")
-dateCheckIn_entry = tk.Entry()
-dateCheckIn_label.pack(), dateCheckIn_entry.pack()
-
-dateCheckOut_label = tk.Label(labelFrame, text="Date Check Out")
-dateCheckOut_entry = tk.Entry()
-dateCheckOut_label.pack(), dateCheckOut_entry.pack()
-
-dropdown_label = tk.Label(labelFrame, text="Room Type")
-dropdownClicked = tk.StringVar()
-dropdownClicked.set("Select room type")
-dropdown = tk.OptionMenu(window, dropdownClicked, *roomTypes)
-dropdown.pack()
-
-# for now, don't check if available, activate fields for daily rate and total charge regardless
-checkAvailabilityBtn = tk.Button(window, command=buttonClick, text="Check Availability")
-checkAvailabilityBtn.place(x=265, y=390)
-
-showReservationsBtn = tk.Button(window, command=reservationClick, text="Show Reservations")
-showReservationsBtn.place(x=265, y=410)
+addReservation_btn = Button(labelFrame, text='Add Reservation', bg='white', font=('Arial', 16), command=addReservation)
+addReservation_btn.place(x=220, y=10)
+deleteReservation_btn = Button(labelFrame, text='Delete Reservation', bg='white', font=('Arial', 16), command=deleteReservation)
+deleteReservation_btn.place(x=220, y=50)
 
 labelFrame.place(x=0, y=0)
 window.mainloop()

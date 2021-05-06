@@ -1,41 +1,66 @@
-from tkinter import Label, Menubutton, Tk
 from tkinter import *
-import array
-import tkinter.messagebox
+from tkinter import ttk
+from tkcalendar import *
+from tkinter import messagebox
+import sqlite3
 
 window = Tk()
-window.title("Dirty Rooms")
-window.geometry("850x200")
-a = 0
+window.geometry("1600x500")
+width = 640
+height = 480
+window.title('Housekeeping')
+window.resizable(True, True)
+background_color = 'light gray'
+labelFrame = Frame(window, width=width, height=height)
 
-for row in range(7):  # populate room and room types
+treeView = ttk.Treeview(window, columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), show="headings", height=20)
+treeView.pack()
+treeView.heading(1, text="Room number")
+treeView.heading(2, text="Housekeeper Name")
+treeView.heading(3, text="Room Type")
+treeView.heading(4, text="Room Status")
+treeView.heading(5, text="Bathroom")
+treeView.heading(6, text="Towels")
+treeView.heading(7, text="Bed Sheets")
+treeView.heading(8, text="Vacuum")
+treeView.heading(9, text="Dusting")
+treeView.heading(10, text="Electronics")
 
-    for column in range(6):
+treeView.column(1, width=120)
+treeView.column(2, width=120)
+treeView.column(3, width=120)
+treeView.column(4, width=120)
+treeView.column(5, width=120)
+treeView.column(5, width=120)
+treeView.column(6, width=120)
+treeView.column(7, width=120)
+treeView.column(8, width=120)
+treeView.column(9, width=120)
+treeView.column(10, width=120)
 
-        if row == 0:
-            lable1 = Label(text="Room Number", bg="black", fg="white", padx=3, pady=2)
-            lable1.grid(row=0, column=1, sticky="nsew", padx=1, pady=1, columnspan=10)
-        elif row == 0 and column == 0:
-            lable0 = Label(text="")
-            lable0.grid(row=0, column=0, sticky="nsew", padx=1, pady=1)
+instructions_label = Label(labelFrame, text='Select a room and then click any of the options to check off', bg=background_color, fg='black', font=('Arial', 12))
+instructions_label.place(x=160, y=450)
 
+bathroom_checkOff = Button(window, text="Check off Bathrooms")
+bathroom_checkOff.place(x=70, y=30)
 
-        else:
-            a += 1  # using Menu Button to let user select status of the room
-            label = Menubutton(window, text=a, bg="green", fg="white", padx=1, pady=1)
-            label.grid(row=row, column=column, sticky="nsew", padx=1, pady=1)
-            window.grid_columnconfigure(column, weight=1, uniform=1)
-            label.menu = Menu(label)
-            label["menu"] = label.menu
-            label.menu.add_command(label="Housekeeper Name")
-            label.menu.add_command(label="Room number")
-            label.menu.add_command(label="Room Type")
-            label.menu.add_command(label="Room Status")
-            label.menu.add_command(label="Bathroom")
-            label.menu.add_command(label="Bed Sheets")
-            label.menu.add_command(label="Vacuum")
-            label.menu.add_command(label="Dusting")
-            label.menu.add_command(label="Electronics")
+towels_checkOff = Button(window, text="Check off Towels")
+towels_checkOff.place(x=70, y=60)
 
+bedsheets_checkOff = Button(window, text="Check off Bed Sheets")
+bedsheets_checkOff.place(x=70, y=90)
 
+vacuum_checkOff = Button(window, text="Check off Vacuum")
+vacuum_checkOff.place(x=70, y=120)
+
+dusting_checkOff = Button(window, text="Check off Dusting")
+dusting_checkOff.place(x=70, y=150)
+
+electronics_checkOff = Button(window, text="Check off Electronics")
+electronics_checkOff.place(x=70, y=180)
+
+all_checkOff = Button(window, text="Check off All")
+all_checkOff.place(x=70, y=210)
+
+labelFrame.place(x=0, y=0)
 window.mainloop()
