@@ -53,12 +53,13 @@ def save(guestID, firstName, lastName, phoneNumber, address, emailAddress, idLab
 
 
 def guestInfo(guestID):
-    if guestID.get().isspace() or len(guestID.get()) == 0:
+    print(guestID)
+    if guestID.isspace() or len(guestID) == 0:
         messagebox.showerror('Invalid Guest ID', 'Guest Not Selected')
     else:
         conn = sqlite3.connect('hotel.db')
         cur = conn.cursor()
-        sql = 'SELECT * FROM guests WHERE guest_id=' + str(guestID.get().rsplit(' ', 1)[1])
+        sql = 'SELECT * FROM guests WHERE guest_id=' + str(guestID.rsplit(' ', 1)[1])
         cur.execute(sql)
         guest = cur.fetchall()
         window = Toplevel()

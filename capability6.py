@@ -166,7 +166,7 @@ def room(roomNumber, firstName=None, lastName=None, dateMade=None, dateCheckIn=N
                      command=lambda room_number=room_number_text: checkOut(room_number))
 
         view_button = Button(label_frame, text='View Guest', font=('Arial', 12),
-                             command=lambda: guestInfo(guest_name_text))
+                             command=lambda: guestInfo(guest_name_text.get()))
 
         btn.place(x=140, y=760)
         view_button.place(x=305, y=50)
@@ -208,7 +208,7 @@ def room(roomNumber, firstName=None, lastName=None, dateMade=None, dateCheckIn=N
                                                                                                     balance))
 
         view_button = Button(label_frame, text='View Guest', font=('Arial', 12),
-                             command=lambda: guestInfo(guest_name_text))
+                             command=lambda: guestInfo(guest_name_text.get()))
 
         btn.place(x=140, y=760)
         view_button.place(x=305, y=50)
