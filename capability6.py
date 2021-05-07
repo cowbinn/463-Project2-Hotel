@@ -6,7 +6,7 @@ from tkinter import messagebox
 from capability5 import guestInfo
 
 
-def checkIn(guestName, checkInDate, checkOutDate, roomNumber, totalCharge, paymentsMade, balance):
+def checkIn(guestName, checkInDate, checkOutDate, roomNumber, totalCharge, paymentsMade, balance, label, window):
     if len(guestName.get()) == 0 or len(checkInDate.get()) == 0 or len(
             checkOutDate.get()) == 0 or len(totalCharge.get()) == 0 or len(paymentsMade.get()) == 0 or len(
         balance.get()) == 0:
@@ -35,15 +35,19 @@ def checkIn(guestName, checkInDate, checkOutDate, roomNumber, totalCharge, payme
         cur.execute(sql)
         conn.commit()
         messagebox.showinfo('Check In Success', 'Guest ' + guestName.get().rsplit(' ', 1)[0] + ' is checked in')
+        window.destroy()
+        label.configure(bg="blue", fg="black")
 
 
-def checkOut(roomNumber):
+def checkOut(roomNumber, label, window):
     conn = sqlite3.connect('hotel.db')
     cur = conn.cursor()
     sql = 'UPDATE Room SET RoomStatus = "Unavailable/Dirty" WHERE roomNumber = ' + str(roomNumber.get())
     cur.execute(sql)
     conn.commit()
     messagebox.showinfo('Check Out Success', 'Checked Out Successfully')
+    window.destroy()
+    label.configure(bg="pink", fg="black")
 
 
 def my_tracer(a, b, c):
@@ -60,7 +64,7 @@ def my_tracer(a, b, c):
     c.config(state=DISABLED)
 
 
-def room(roomNumber, firstName=None, lastName=None, dateMade=None, dateCheckIn=None, dateCheckOut=None):
+def room(roomNumber, label, firstName=None, lastName=None, dateMade=None, dateCheckIn=None, dateCheckOut=None):
     conn = sqlite3.connect('hotel.db')
     cur = conn.cursor()
     sql = 'SELECT * FROM Room WHERE RoomNumber=' + str(roomNumber)
@@ -163,7 +167,7 @@ def room(roomNumber, firstName=None, lastName=None, dateMade=None, dateCheckIn=N
         balance_text.insert(0, result[0][9])
         balance_text.config(state='disabled')
         btn = Button(label_frame, text='Check Out', bg='white', font=('Arial', 16),
-                     command=lambda room_number=room_number_text: checkOut(room_number))
+                     command=lambda room_number=room_number_text, l=label, w=window: checkOut(room_number, l, w))
 
         view_button = Button(label_frame, text='View Guest', font=('Arial', 12),
                              command=lambda: guestInfo(guest_name_text.get()))
@@ -199,13 +203,13 @@ def room(roomNumber, firstName=None, lastName=None, dateMade=None, dateCheckIn=N
                      command=lambda guest_name=guest_name_text, check_in_date=check_in_text,
                                     check_out_date=expected_check_out_text, room_number=room_number_text,
                                     total_charge=total_charge_text,
-                                    payments_made=payments_made_text, balance=balance_text: checkIn(guest_name,
+                                    payments_made=payments_made_text, balance=balance_text, l=label, w=window: checkIn(guest_name,
                                                                                                     check_in_date,
                                                                                                     check_out_date,
                                                                                                     room_number,
                                                                                                     total_charge,
                                                                                                     payments_made,
-                                                                                                    balance))
+                                                                                                    balance, l, w))
 
         view_button = Button(label_frame, text='View Guest', font=('Arial', 12),
                              command=lambda: guestInfo(guest_name_text.get()))
