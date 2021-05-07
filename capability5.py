@@ -46,7 +46,7 @@ def save(guestID, firstName, lastName, phoneNumber, address, emailAddress, idLab
     else:
         conn = sqlite3.connect('hotel.db')
         cur = conn.cursor()
-        sql = 'UPDATE guests SET first_name = "' + str(firstName.get()) + '", last_name = "' + str(lastName.get()) + '", phone_number = "' + str(phoneNumber.get()) + '", street_address = "' + str(address.get('1.0', END)) + '", email_address = "' + str(emailAddress.get()) + '", id_info = "' + str(idLabel.get()) + '", vehicle_license_plate = "' + str(vehicleLicensePlate.get()) + '", image = "' + pic.text.decode('ascii') + '" WHERE guest_id = ' + str(guestID.get().rsplit(' ', 1)[1])
+        sql = 'UPDATE guests SET first_name = "' + str(firstName.get()) + '", last_name = "' + str(lastName.get()) + '", phone_number = "' + str(phoneNumber.get()) + '", street_address = "' + str(address.get('1.0', END)) + '", email_address = "' + str(emailAddress.get()) + '", id_info = "' + str(idLabel.get()) + '", vehicle_license_plate = "' + str(vehicleLicensePlate.get()) + '", image = "' + pic.text.decode('ascii') + '" WHERE guest_id = ' + str(guestID.rsplit(' ', 1)[1])
         cur.execute(sql)
         conn.commit()
         messagebox.showinfo('Data Saved', 'Saved Successfully', parent=win)
