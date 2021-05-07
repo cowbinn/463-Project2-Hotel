@@ -10,17 +10,17 @@ from capability6 import room
 
 
 def roomType():
-    root= Tk()
-    root.title("Key")
-    root.geometry("375x150+850+50")
-    window = Toplevel()
-    window.title("Room Type")
-    window.geometry("800x200+0+50")
+    roomroot= Tk()
+    roomroot.title("Key")
+    roomroot.geometry("410x150+850+50")
+    roomwindow = Toplevel()
+    roomwindow.title("Room Type")
+    roomwindow.geometry("800x200+0+50")
     h=99#set room to start at 99 then add 1 to make 100 initial starting room
     def closeWindow(roomNumber,l):
-        window.destroy()
+        roomwindow.destroy()
         room(roomNumber,l)
-        root.destroy()
+        roomroot.destroy()
     def makeAvailable(roomNumber):
         conn = sqlite3.connect('hotel.db')
         cur = conn.cursor()
@@ -47,16 +47,16 @@ def roomType():
         conn.commit()
     #function to change color depends on status of the room
     def loadDirtyRoom(row,column):
-        widget= window.grid_slaves(row=row, column=column)[0]
+        widget= roomwindow.grid_slaves(row=row, column=column)[0]
         widget.configure(bg="pink",fg="black")
     def loadOccupiedRoom(row,column):
-        widget= window.grid_slaves(row=row, column=column)[0]
+        widget= roomwindow.grid_slaves(row=row, column=column)[0]
         widget.configure(bg="blue",fg="black")
     def loadMaintenanceRoom(row,column):
-        widget= window.grid_slaves(row=row, column=column)[0]
+        widget= roomwindow.grid_slaves(row=row, column=column)[0]
         widget.configure(bg="red",fg="white")
     def loadAvailableRoom(row,column):
-        widget= window.grid_slaves(row=row, column=column)[0]
+        widget= roomwindow.grid_slaves(row=row, column=column)[0]
         widget.configure(bg="green")
     def availableRoom(row,column,h,l):
         # print(label.grid_info())
@@ -119,44 +119,44 @@ def roomType():
         for column in range (6):
             
             if row == 0 :
-                lable1 = Label(window,text="Room Number",bg="black",fg="white",padx= 3,pady=3)
+                lable1 = Label(roomwindow,text="Room Number",bg="black",fg="white",padx= 3,pady=3)
                 lable1.grid(row=0,column=1,sticky= "nsew",padx= 1,pady=1,columnspan=8)    
             elif row == 0 and column==0:
-                lable0= Label(window,text="")
+                lable0= Label(roomwindow,text="")
                 lable0.grid(row=0, column=0,sticky= "nsew",padx= 1,pady=1)
 
             elif column == 0 and row ==1:
-                lable2=Label(window,text="King Size bed",bg="black",fg="white",padx= 3,pady=3)
+                lable2=Label(roomwindow,text="King Size bed",bg="black",fg="white",padx= 3,pady=3)
                 lable2.grid(row=1, column=0,sticky= "nsew",padx= 1,pady=1)
             elif column == 0 and row ==2:
-                lable3=Label(window,text="Double Queen Bed",bg="black",fg="white",padx= 3,pady=3)
+                lable3=Label(roomwindow,text="Double Queen Bed",bg="black",fg="white",padx= 3,pady=3)
                 lable3.grid(row=2, column=0,sticky= "nsew",padx= 1,pady=1)
             elif row ==3 and column==0:
-                lable4=Label(window,text="Double Queen Bed With Kitchen",bg="black",fg="white",padx= 3,pady=3)
+                lable4=Label(roomwindow,text="Double Queen Bed With Kitchen",bg="black",fg="white",padx= 3,pady=3)
                 lable4.grid(row=3, column =0,sticky= "nsew",padx= 1,pady=1)
             elif row ==4 and column==0:
-                lable5=Label(window,text="Suite",bg="black",fg="white",padx= 3,pady=3)
+                lable5=Label(roomwindow,text="Suite",bg="black",fg="white",padx= 3,pady=3)
                 lable5.grid(row=4, column =0,sticky= "nsew",padx= 1,pady=1)
             elif row == 5 :
-                label6= Label(text= "Key", bg="Gray", fg="white",padx=3,pady=3,font="24")
+                label6= Label(roomroot, text= "Key", bg="Gray", fg="white",padx=3,pady=3,font="24")
                 label6.grid(row=5, column= 1,sticky= "nsew",padx= 1,pady=1, columnspan= 6)
             elif row== 6 :
-                labelG= Label(text= "Maintenance", bg="red", fg="white")
+                labelG= Label(roomroot, text= "Maintenance", bg="red", fg="white")
                 labelG.grid(row=6, column= 5,sticky= "nsew",padx= 0,pady=1,columnspan=1)
-                labelG= Label(text= "Available", bg="green", fg="white")
+                labelG= Label(roomroot, text= "Available", bg="green", fg="white")
                 labelG.grid(row=6, column= 2,sticky= "nsew",padx= 0,pady=1,columnspan=1)
-                labelG= Label(text= "Occupied", bg="blue", fg="white")
+                labelG= Label(roomroot, text= "Occupied", bg="blue", fg="white")
                 labelG.grid(row=6, column= 3,sticky= "nsew",padx= 0,pady=1,columnspan=1)
-                labelG= Label(text= "Dirty", bg="pink", fg="black")
+                labelG= Label(roomroot, text= "Dirty", bg="pink", fg="black")
                 labelG.grid(row=6, column= 4,sticky= "nsew",padx= 0,pady=1,columnspan=1)
             elif row==7:
-                labelh= Label(text= "To check out please select occupied again",font="18",bg= "grey",fg="white")
+                labelh= Label(roomroot, text= "To check out please select occupied again",font="18",bg= "grey",fg="white")
                 labelh.grid(row=7,column =2, columnspan =4)
             elif row==8:
-                labelh= Label(text= "To Make room Available click on the coressponding Status",font="18",bg= "grey",fg="white")
+                labelh= Label(roomroot, text= "To Make room Available click on the coressponding Status",font="18",bg= "grey",fg="white")
                 labelh.grid(row=8,column =2, columnspan =4)
             elif row==9:
-                labelh= Label(text= "To exit please close the Key window",font="18",bg= "grey",fg="white")
+                labelh= Label(roomroot, text= "To exit please close the Key window",font="18",bg= "grey",fg="white")
                 labelh.grid(row=9,column =2, columnspan =4)
 
                 
@@ -164,9 +164,9 @@ def roomType():
             
             else:  
                 h+=1  #using Menu Button to let user select status of the room
-                label = Menubutton(window, text=h,bg="green",fg="white",padx= 1,pady=1)
+                label = Menubutton(roomwindow, text=h,bg="green",fg="white",padx= 1,pady=1)
                 label.grid(row=row, column= column,sticky= "nsew",padx= 1,pady=1)
-                window.grid_columnconfigure(column, weight= 1, uniform =1)
+                roomwindow.grid_columnconfigure(column, weight= 1, uniform =1)
                 label.menu= Menu (label)
                 label["menu"]= label.menu
                 label.menu.add_command (label = "available",command=lambda  h = h ,row= row, column=column, l= label : availableRoom(row,column,h,l))
@@ -208,6 +208,4 @@ def roomType():
                 roomResult2 = cur.fetchall()
                 for temp in roomResult2:
                     loadAvailableRoom(temp[0],temp[1])
-    reloadWindow()
-    window.mainloop()
-roomType()
+
