@@ -4,17 +4,64 @@ from tkcalendar import *
 from tkinter import messagebox
 import sqlite3
 
+conn = sqlite3.connect('hotel.db')
+cur = conn.cursor()
+
 window = Tk()
-window.geometry("640x480")
+window.geometry("1600x500")
 width = 640
 height = 480
 window.title('Reservations')
-window.geometry('640x480')
+window.geometry('1600x500')
 window.resizable(True, True)
 background_color = 'light gray'
 labelFrame = Frame(window, width=width, height=height)
 
+treeView = ttk.Treeview(window, columns=(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), show="headings", height=20)
+treeView.pack(side='right')
+vertical_scroll_treeView = Scrollbar(window, orient="vertical", command=treeView.yview)
+vertical_scroll_treeView.pack(side='right',fill='y')
+treeView.configure(yscrollcommand=vertical_scroll_treeView.set)
+
+treeView.heading(1, text="First Name")
+treeView.heading(2, text="Last Name")
+treeView.heading(3, text="Date Made")
+treeView.heading(4, text="Date Check In")
+treeView.heading(5, text="Date Checkout")
+treeView.heading(6, text="Room Type")
+treeView.heading(7, text="Room Number")
+treeView.heading(8, text="Website Reservation Made")
+treeView.heading(9, text="Rate($/Day)")
+treeView.heading(10, text="Total Charge")
+
+treeView.column(1, width=120)
+treeView.column(2, width=120)
+treeView.column(3, width=120)
+treeView.column(4, width=120)
+treeView.column(5, width=120)
+treeView.column(5, width=120)
+treeView.column(6, width=120)
+treeView.column(7, width=120)
+treeView.column(8, width=160)
+treeView.column(9, width=120)
+treeView.column(10, width=120)
+
+sql = "SELECT DISTINCT guests.first_name, guests.last_name, Room.DateMade, Room.CheckInDate, Room.CheckOutDate, " \
+      "Room.RoomType, Room.RoomNumber, Room.WebsiteReservationMade, Room.Rate, Room.TotalCharge FROM guests, Room"
+data = cur.execute(sql)
+data = cur.fetchall()
+for i in data:
+    treeView.insert('', 'end', values=i)
+
 def addReservation():
+
+    def addResBtn():
+        roomScript = "INSERT INTO Room (DateMade, CheckInDate, CheckOutDate, RoomType, " \
+                     "RoomNumber, WebsiteReservationMade, Rate, TotalCharge) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+        guestScript = "INSERT INTO guests (first_name, last_name) VALUES (?,?)"
+        conn.execute(roomScript, (str(dateMade_text.get()), str(dateCheckIn_label.get()), str(dateCheckOut_label.get()), str(roomType_text.get()),
+                                  str(roomNumber_text.get()), str(websiteReservation_text.get()), str(rate_text.get()), str(totalCharge_text.get())))
+        conn.execute(guestScript, (firstName_text, lastName_text))
 
     addResWindow = Toplevel(window)
     addResWindow.title("Add Reservation")
@@ -65,42 +112,31 @@ def addReservation():
 
     websiteReservation_label = Label(reservation_frame, text='Website Reservation Made', bg=background_color, fg='black', font=('Arial', 16))
     websiteReservation_label.place(x=40, y=300)
-    websiteReservation_label = Entry(reservation_frame, bg='white', font=('Arial', 16))
-    websiteReservation_label.place(x=40, y=330)
+    websiteReservation_text = Entry(reservation_frame, bg='white', font=('Arial', 16))
+    websiteReservation_text.place(x=40, y=330)
 
     rate_label = Label(reservation_frame, text='Rate($/Day)', bg=background_color, fg='black', font=('Arial', 16))
     rate_label.place(x=40, y=360)
-    rate_label = Entry(reservation_frame, bg='white', font=('Arial', 16))
-    rate_label.place(x=165, y=360)
+    rate_text = Entry(reservation_frame, bg='white', font=('Arial', 16))
+    rate_text.place(x=165, y=360)
 
     totalCharge_label = Label(reservation_frame, text='Total Charge', bg=background_color, fg='black', font=('Arial', 16))
     totalCharge_label.place(x=40, y=400)
-    totalCharge_label = Entry(reservation_frame, bg='white', font=('Arial', 16))
-    totalCharge_label.place(x=170, y=400)
+    totalCharge_text = Entry(reservation_frame, bg='white', font=('Arial', 16))
+    totalCharge_text.place(x=170, y=400)
 
-    addReservation = Button(addResWindow, text="Click to add")
+    addReservation = Button(addResWindow, text="Click to add", command=addResBtn)
     addReservation.place(x=170, y=450)
 
+
 def deleteReservation():
-    addDelWindow = Toplevel(window)
-    addDelWindow.title("Delete Reservation")
-    addDelWindow.geometry("500x450")
-    deleteReservation_frame = Frame(addDelWindow, width=400, height=850)
-    deleteReservation_frame.place(x=0, y=0)
-
-    reservation_label = Label(deleteReservation_frame, text='Enter Reservation Last Name', bg=background_color, font=('Arial', 16))
-    reservation_text = Entry(deleteReservation_frame, bg='white', font=('Arial', 16))
-    reservation_label.place(x=40, y=60)
-    reservation_text.place(x=40, y=90)
-
-    searchBtn = Button(addDelWindow, text="Search")
-    searchBtn.place(x=40, y=120)
-
+    row_id = treeView.selection()[0]
+    treeView.delete(row_id)
 
 addReservation_btn = Button(labelFrame, text='Add Reservation', bg='white', font=('Arial', 16), command=addReservation)
-addReservation_btn.place(x=220, y=10)
+addReservation_btn.place(x=160, y=130)
 deleteReservation_btn = Button(labelFrame, text='Delete Reservation', bg='white', font=('Arial', 16), command=deleteReservation)
-deleteReservation_btn.place(x=220, y=50)
+deleteReservation_btn.place(x=135, y=230)
 
 labelFrame.place(x=0, y=0)
 window.mainloop()
