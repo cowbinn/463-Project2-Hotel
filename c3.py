@@ -142,7 +142,7 @@ def reservationSystem():
     addReservation_btn.place(x=160, y=130)
     deleteReservation_btn = Button(labelFrame, text='Delete Reservation', bg='white', font=('Arial', 16), command=deleteReservation)
     deleteReservation_btn.place(x=135, y=230)
-    cap6_btn = Button(labelFrame, text='Check In', bg='white', font=('Arial', 16), command=lambda: room(treeView.item(treeView.focus())["values"][6]))
+    cap6_btn = Button(labelFrame, text='Check In', bg='white', font=('Arial', 16), command=lambda: room(treeView.item(treeView.focus())["values"][6], firstName=treeView.item(treeView.focus())["values"][0], lastName=treeView.item(treeView.focus())["values"][1], dateCheckIn =treeView.item(treeView.focus())["values"][3], dateCheckOut=treeView.item(treeView.focus())["values"][4]))
     cap6_btn.place(x=135, y=330)
 
     labelFrame.place(x=0, y=0)
