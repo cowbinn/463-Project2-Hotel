@@ -7,6 +7,7 @@ from c7c8 import daily_report_menu, search_menu
 from Roomtype import roomType
 from Room import RoomAvailibity
 from c4 import housekeeping
+from c3 import reservationSystem
 
 root = Tk()
 root.title("Main Screen")
@@ -20,12 +21,11 @@ room_type_button.place(x=100, y=120)
 room_list_button = Button(root, text="C2 - Room List", command=RoomAvailibity)
 room_list_button.place(x=400, y=120)
 
-reservation_button = Button(root, text="C3 - Reservation", command=print('reservationfunctionhere'))
+reservation_button = Button(root, text="C3 - Reservation", command=reservationSystem)
 reservation_button.place(x=100, y=170)
 
 housekeeping_button = Button(root, text="C4 - Housekeeping", command=housekeeping)
 housekeeping_button.place(x=400, y=170)
-
 
 search_menu_button = Button(root, text="C7 - Search for Guest", command=search_menu)
 search_menu_button.place(x=100, y=220)

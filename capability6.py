@@ -223,4 +223,3 @@ def room(roomNumber, label= None, firstName=None, lastName=None, dateMade=None, 
         view_button.place(x=305, y=50)
 
     label_frame.place(x=0, y=0)
-    window.mainloop()
