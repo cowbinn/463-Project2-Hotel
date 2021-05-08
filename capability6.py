@@ -30,7 +30,7 @@ def checkIn(guestName, checkInDate, checkOutDate, roomNumber, totalCharge, payme
         sql = 'UPDATE Room SET RoomStatus = "Unavailable/Occupied", CheckInDate = "' + str(
             checkInDate.get()) + '", CheckOutDate = "' + str(
             checkOutDate.get()) + '", GuestID = ' + str(guestName.get().rsplit(' ', 1)[1]) + ', TotalCharge = ' + str(
-            totalCharge.get()) + ', PaymentsMade = ' + str(paymentsMade.get()) + ', Balance = ' + str(
+            totalCharge.get()) + ', PaymentsMade = ' + str(paymentsMade.get())+ ', CheckIN = ' + str(1) + ', Balance = ' + str(
             balance.get()) + ' WHERE roomNumber = ' + str(roomNumber.get())
         cur.execute(sql)
         conn.commit()
@@ -42,7 +42,8 @@ def checkIn(guestName, checkInDate, checkOutDate, roomNumber, totalCharge, payme
 def checkOut(roomNumber, label, window):
     conn = sqlite3.connect('hotel.db')
     cur = conn.cursor()
-    sql = 'UPDATE Room SET RoomStatus = "Unavailable/Dirty" WHERE roomNumber = ' + str(roomNumber.get())
+    sql = 'UPDATE Room SET RoomStatus = "Unavailable/Dirty", CHeckIN = ' + str(
+            0) + ', GuestID = '+ str('null') +'  WHERE roomNumber = ' + str(roomNumber.get())
     cur.execute(sql)
     conn.commit()
     messagebox.showinfo('Check Out Success', 'Checked Out Successfully')

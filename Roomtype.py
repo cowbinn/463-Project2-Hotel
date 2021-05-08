@@ -24,7 +24,9 @@ def roomType():
     def makeAvailable(roomNumber):
         conn = sqlite3.connect('hotel.db')
         cur = conn.cursor()
-        sql = 'UPDATE Room SET RoomStatus = "Available" WHERE roomNumber = ' + str(roomNumber)
+        sql = 'UPDATE Room SET RoomStatus = "Available",CHeckIN = ' + str(
+            0) +', GuestID = '+ str('null') +' WHERE roomNumber = ' + str(roomNumber)
+ 
         cur.execute(sql)
         conn.commit()
     def makeUnavailable(roomNumber):
@@ -84,6 +86,7 @@ def roomType():
         # widget= window.grid_slaves(row=row, column=column)[0]
         # widget.configure(bg="blue",fg="black")
     
+
     def maintenanceRoom(row,column,h,l):
         #print(label.grid_info())
         # l.config(bg="red", fg="white")
@@ -98,7 +101,7 @@ def roomType():
         result = cur.fetchall()
         print(result)
         for row in result:
-            if (row[2] == "Available"):
+            if (row[2] == "Available" or row[2]== "Unavailable/Dirty" or  row[2]== "Unavailable/Occupied"):
                 MsgBox = messagebox.askquestion('Room Maintanance?','Room Need Maintenance?')
                 if MsgBox =='yes':
                     l.config(bg="red", fg="white")
@@ -111,7 +114,7 @@ def roomType():
                     availableRoom(row,column,h,l)
                 else:
                     pass
-            
+                
 
     for row in range (10):#populate room and room types
 
