@@ -211,4 +211,5 @@ def roomType():
                 roomResult2 = cur.fetchall()
                 for temp in roomResult2:
                     loadAvailableRoom(temp[0],temp[1])
+    reloadWindow()
 

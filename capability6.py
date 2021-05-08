@@ -6,6 +6,7 @@ from tkinter import messagebox
 from capability5 import guestInfo
 
 
+
 def checkIn(guestName, checkInDate, checkOutDate, roomNumber, totalCharge, paymentsMade, balance, label, window):
     if len(guestName.get()) == 0 or len(checkInDate.get()) == 0 or len(
             checkOutDate.get()) == 0 or len(totalCharge.get()) == 0 or len(paymentsMade.get()) == 0 or len(
@@ -37,6 +38,8 @@ def checkIn(guestName, checkInDate, checkOutDate, roomNumber, totalCharge, payme
         messagebox.showinfo('Check In Success', 'Guest ' + guestName.get().rsplit(' ', 1)[0] + ' is checked in')
         window.destroy()
         label.configure(bg="blue", fg="black")
+        
+        
 
 
 def checkOut(roomNumber, label, window):
@@ -65,7 +68,7 @@ def my_tracer(a, b, c):
     c.config(state=DISABLED)
 
 
-def room(roomNumber, label, firstName=None, lastName=None, dateMade=None, dateCheckIn=None, dateCheckOut=None):
+def room(roomNumber, label= None, firstName=None, lastName=None, dateMade=None, dateCheckIn=None, dateCheckOut=None):
     conn = sqlite3.connect('hotel.db')
     cur = conn.cursor()
     sql = 'SELECT * FROM Room WHERE RoomNumber=' + str(roomNumber)
@@ -89,15 +92,16 @@ def room(roomNumber, label, firstName=None, lastName=None, dateMade=None, dateCh
     check_in_label = Label(label_frame, text='Check In Date and Time', bg=background_color, fg='black',
                            font=('Arial', 16))
     check_in_label.place(x=40, y=100)
-    check_in_text = DateEntry(label_frame, bg='white', font=('Arial', 16))
+    check_in_text = DateEntry(label_frame, bg='white', font=('Arial', 16),date_pattern= "yyyy/MM/dd")
     check_in_text.place(x=40, y=130)
     check_in_text.delete(0, END)
 
     expected_check_out_label = Label(label_frame, text='Expected Check Out Date and Time', bg=background_color,
                                      fg='black', font=('Arial', 16))
     expected_check_out_label.place(x=40, y=180)
-    expected_check_out_text = DateEntry(label_frame, bg='white', font=('Arial', 16))
+    expected_check_out_text = DateEntry(label_frame, bg='white', font=('Arial', 16),date_pattern= "yyyy/MM/dd")
     expected_check_out_text.place(x=40, y=210)
+    expected_check_out_text._top_cal.overrideredirect(False)
     expected_check_out_text.delete(0, END)
 
     room_number_label = Label(label_frame, text='Room Number', bg=background_color, fg='black',
