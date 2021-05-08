@@ -179,7 +179,7 @@ def daily_report_menu():
     daily_report_label = Label(daily_report, text="Daily Report: ")
     daily_report_label.pack()
     # Add calendar
-    cal = Calendar(daily_report, selectmode = 'day')
+    cal = Calendar(daily_report, selectmode = 'day', date_pattern= "yyyy/MM/dd")
     cal.pack(pady=5)
     # search button
     search_button = Button(daily_report, text="Submit", command=search)
