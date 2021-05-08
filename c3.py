@@ -3,6 +3,7 @@ from tkinter import ttk
 from tkcalendar import *
 from tkinter import messagebox
 import sqlite3
+from capability6 import room
 
 def reservationSystem():
     conn = sqlite3.connect('hotel.db')
@@ -47,8 +48,9 @@ def reservationSystem():
     treeView.column(9, width=120)
     treeView.column(10, width=120)
 
-    sql = "SELECT DISTINCT guests.first_name, guests.last_name, Room.DateMade, Room.CheckInDate, Room.CheckOutDate, " \
-        "Room.RoomType, Room.RoomNumber, Room.WebsiteReservationMade, Room.RoomRate, Room.TotalCharge FROM guests, Room"
+    sql = "SELECT guests.first_name, guests.last_name, Room.DateMade, Room.CheckInDate, Room.CheckOutDate, " \
+          "Room.RoomType, Room.RoomNumber, Room.WebsiteReservation, Room.RoomRate, Room.TotalCharge FROM guests " \
+          "INNER JOIN ROOM ON guests.guest_id = room.GuestID"
     data = cur.execute(sql)
     data = cur.fetchall()
     for i in data:
@@ -56,13 +58,15 @@ def reservationSystem():
 
     def addReservation():
 
-        def addResBtn():
-            roomScript = "INSERT INTO Room (DateMade, CheckInDate, CheckOutDate, RoomType, " \
-                        "RoomNumber, WebsiteReservationMade, RoomRate, TotalCharge) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-            guestScript = "INSERT INTO guests (first_name, last_name) VALUES (?,?)"
-            conn.execute(roomScript, (str(dateMade_text.get()), str(dateCheckIn_label.get()), str(dateCheckOut_label.get()), str(roomType_text.get()),
-                                    str(roomNumber_text.get()), str(websiteReservation_text.get()), str(rate_text.get()), str(totalCharge_text.get())))
-            conn.execute(guestScript, (firstName_text, lastName_text))
+        def insert():
+            roomScript = "UPDATE Room SET DateMade = ?, CheckInDate = ?, CheckOutDate = ?, RoomType = ?, " \
+                         "RoomNumber = ?, WebsiteReservation = ?, RoomRate = ?, TotalCharge = ? WHERE RoomNumber = " + str(roomNumber_text.get())
+            guestScript = "UPDATE guests SET first_name = ?, last_name = ? WHERE guest_id = " + str(roomNumber_text.get())
+            cur.execute(roomScript, (str(dateMade_text.get()), str(dateCheckIn_label.get()), str(dateCheckOut_label.get()),
+                        str(roomType_text.get()), str(roomNumber_text.get()), str(websiteReservation_text.get()), str(rate_text.get()),
+                        str(totalCharge_text.get())))
+            cur.execute(guestScript, (str(firstName_text.get()), str(lastName_text.get())))
+            conn.commit()
 
         addResWindow = Toplevel(window)
         addResWindow.title("Add Reservation")
@@ -81,21 +85,21 @@ def reservationSystem():
         lastName_text.place(x=150, y=60)
 
         dateMade_label = Label(reservation_frame, text='Date Made', bg=background_color, fg='black',
-                            font=('Arial', 16))
+                               font=('Arial', 16))
         dateMade_label.place(x=40, y=100)
         dateMade_text = DateEntry(reservation_frame, bg='white', font=('Arial', 16))
         dateMade_text.place(x=150, y=100)
         dateMade_text.delete(0, END)
 
         dateCheckIn_label = Label(reservation_frame, text='Date Check In', bg=background_color, fg='black',
-                            font=('Arial', 16))
+                               font=('Arial', 16))
         dateCheckIn_label.place(x=40, y=140)
         dateCheckIn_label = DateEntry(reservation_frame, bg='white', font=('Arial', 16))
         dateCheckIn_label.place(x=180, y=140)
         dateCheckIn_label.delete(0, END)
 
         dateCheckOut_label = Label(reservation_frame, text='Date Check Out', bg=background_color, fg='black',
-                            font=('Arial', 16))
+                               font=('Arial', 16))
         dateCheckOut_label.place(x=40, y=180)
         dateCheckOut_label = DateEntry(reservation_frame, bg='white', font=('Arial', 16))
         dateCheckOut_label.place(x=200, y=180)
@@ -126,7 +130,7 @@ def reservationSystem():
         totalCharge_text = Entry(reservation_frame, bg='white', font=('Arial', 16))
         totalCharge_text.place(x=170, y=400)
 
-        addReservation = Button(addResWindow, text="Click to add", command=addResBtn)
+        addReservation = Button(addResWindow, text="Click to add", command=insert)
         addReservation.place(x=170, y=450)
 
 
@@ -138,8 +142,8 @@ def reservationSystem():
     addReservation_btn.place(x=160, y=130)
     deleteReservation_btn = Button(labelFrame, text='Delete Reservation', bg='white', font=('Arial', 16), command=deleteReservation)
     deleteReservation_btn.place(x=135, y=230)
+    cap6_btn = Button(labelFrame, text='Check In', bg='white', font=('Arial', 16), command=room(101))
+    cap6_btn.place(x=135, y=330)
 
     labelFrame.place(x=0, y=0)
     window.mainloop()
-
-
