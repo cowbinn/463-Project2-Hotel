@@ -40,7 +40,6 @@ def checkIn(guestName, checkInDate, checkOutDate, roomNumber, totalCharge, payme
         label.configure(bg="blue", fg="black")
         
         
-        
 
 
 def checkOut(roomNumber, label, window):
