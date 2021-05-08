@@ -8,6 +8,7 @@ import sqlite3
 import datetime
 from datetime import date
 from capability6 import room
+from c3 import addReservation
 
 currentDate= datetime.datetime.now()
 currentDay= date.today()#current date for schedule
@@ -99,7 +100,7 @@ for row in range (22):
             if column==1:
                 label6.menu.add_command (label = "check In",command=lambda roomNumber= a :checkIn(roomNumber))
             else:
-                label6.menu.add_command (label = "Reservation",command=lambda roomNumber= a :room(roomNumber))
+                label6.menu.add_command (label = "Reservation",command=lambda roomNumber= a :addReservation())
             # lambda  h = h ,row= row, column=column, l= label : availableRoom(row,column,h,l))
             # label.menu.add_command (label = "Reservation", command=lambda  h= h, row= row, column=column, l= label : occupiedRoom(row,column,h,l))
 
