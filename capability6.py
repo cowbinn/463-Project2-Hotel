@@ -54,18 +54,18 @@ def checkOut(roomNumber, label, window):
     label.configure(bg="pink", fg="black")
 
 
-def my_tracer(a, b, c):
-    new_a = a.get()
-    if new_a == '':
-        new_a = 0.0
-    new_b = b.get()
-    if new_b == '':
-        new_b = 0.0
-    new_c = float(new_a) - float(new_b)
-    c.config(state=NORMAL)
-    c.delete(0, END)
-    c.insert(0, new_c)
-    c.config(state=DISABLED)
+# def my_tracer(a, b, c):
+#     new_a = a.get()
+#     if new_a == '':
+#         new_a = 0.0
+#     new_b = b.get()
+#     if new_b == '':
+#         new_b = 0.0
+#     new_c = float(new_a) - float(new_b)
+#     c.config(state=NORMAL)
+#     c.delete(0, END)
+#     c.insert(0, new_c)
+#     c.config(state=DISABLED)
 
 
 def room(roomNumber, label= None, firstName=None, lastName=None, dateMade=None, dateCheckIn=None, dateCheckOut=None):
@@ -145,10 +145,10 @@ def room(roomNumber, label= None, firstName=None, lastName=None, dateMade=None, 
     balance_label.place(x=40, y=660)
     balance_text = Entry(label_frame, bg='white', font=('Arial', 16))
     balance_text.place(x=40, y=690)
-    balance_text.config(state='disabled')
+    # balance_text.config(state='disabled')
 
-    total_charge_var.trace('w', lambda a, b, c: my_tracer(total_charge_text, payments_made_text, balance_text))
-    payments_made_var.trace('w', lambda a, b, c: my_tracer(total_charge_text, payments_made_text, balance_text))
+    # total_charge_var.trace('w', lambda a, b, c: my_tracer(total_charge_text, payments_made_text, balance_text))
+    # payments_made_var.trace('w', lambda a, b, c: my_tracer(total_charge_text, payments_made_text, balance_text))
 
     if result[0][2] == 'Unavailable/Occupied':
         cur = conn.cursor()
@@ -170,7 +170,7 @@ def room(roomNumber, label= None, firstName=None, lastName=None, dateMade=None, 
         payments_made_text.insert(0, result[0][8])
         # payments_made_text.config(state='disabled')
         balance_text.insert(0, result[0][9])
-        balance_text.config(state='disabled')
+        # balance_text.config(state='disabled')
         btn = Button(label_frame, text='Check Out', bg='white', font=('Arial', 16),
                      command=lambda room_number=room_number_text, l=label, w=window: checkOut(room_number, l, w))
 
