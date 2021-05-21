@@ -73,11 +73,35 @@ def roomType():
         # # widget= window.grid_slaves(row=row, column=column)[0]
         # # widget.configure(bg="pink",fg="black")
         # l.configure(bg="pink",fg="black")
-        MsgBox = messagebox.askquestion('Make room available ?','Make room available?')
-        if MsgBox =='yes':
-            availableRoom(row,column,h,l)
-        else:
-            pass
+        conn = sqlite3.connect('hotel.db')
+        sql5 = 'SELECT * FROM Room WHERE RoomNumber='+str(h)
+        cur = conn.cursor()
+        cur.execute(sql5)
+        print (h)
+        result = cur.fetchall()
+        print(result)
+        for row in result:
+            if (row[2] == "Available" or row[2]== "Unavailable/Maintenance" or  row[2]== "Unavailable/Occupied"):
+                MsgBox = messagebox.askquestion('Room Dirty?','Is room dirty??')
+                if MsgBox =='yes':
+                    l.config(bg="pink", fg="white")
+                    makeRoomDirty(h)
+                else:
+                    pass
+            if (row[2] == "Unavailable/Dirty"):
+                MsgBox = messagebox.askquestion('Room Dirty?','Make room Available?')
+                if MsgBox =='yes':
+                    availableRoom(row,column,h,l)
+                else:
+                    pass
+        
+        
+        
+        
+        
+        
+        
+
 
     def occupiedRoom(row,column,h,l):
         #print(label.grid_info())
